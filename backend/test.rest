@@ -1,0 +1,23 @@
+get http://localhost:3000/users  
+###
+get http://localhost:3000/users/1
+###
+POST http://localhost:3000/users
+Content-Type: application/json
+
+{
+  
+  "email": "maysoun@example.com",
+  "password": "mayssoun123",
+  "name": "mayssoun"
+}
+###
+PATCH http://localhost:3000/users/6
+Content-Type: application/json
+
+{
+  
+  "email": "moezmoez1@example.com"
+}
+###
+DELETE http://localhost:3000/users/9
