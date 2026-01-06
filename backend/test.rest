@@ -13,7 +13,7 @@ Content-Type: application/json
   "location": "montreal"
 }
 ###
-PATCH http://localhost:3000/users/6
+PUT http://localhost:3000/users/9
 Content-Type: application/json
 
 {
@@ -22,3 +22,23 @@ Content-Type: application/json
 }
 ###
 DELETE http://localhost:3000/users/9
+###
+#####################################
+get http://localhost:3000/books  
+###
+get http://localhost:3000/books/6
+###
+POST http://localhost:3000/books
+Content-Type: application/json
+
+{
+  
+  "title": "Le Petit Prince 1",
+  "author": "Antoine de Saint-Exupéry",
+  "category": "CHILDREN",
+  "ageRange": "8-12",
+  "schoolLevel": "primaire",
+  "language": "fr"
+}
+###
+DELETE http://localhost:3000/books/9
