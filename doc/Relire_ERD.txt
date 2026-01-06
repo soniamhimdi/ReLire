@@ -1,0 +1,72 @@
+ERDiagram
+	User (1) → (N) Listing           (Un utilisateur crée plusieurs annonces)
+	Book (1) → (N) Listing           (Un livre peut être listé plusieurs fois)
+	Listing (1) → (0..1) Transaction (Une annonce peut mener à une transaction)
+	User (1) → (N) Transaction       (Un utilisateur participe à plusieurs transactions)
+	User (1) → (N) Review            (Un utilisateur donne/reçoit plusieurs avis)
+	Transaction (1) → (0..1) Review  (Une transaction peut avoir un avis)
+
+
+
+    User ||--o{ Listing : "crée"
+    User ||--o{ Transaction : "participe"
+    User ||--o{ Review : "donne/reçoit"
+    
+    Book ||--o{ Listing : "référencé dans"
+    
+    Listing ||--o| Transaction : "vendue via"
+    
+    Transaction ||--o| Review : "évaluée par"
+    
+    User {
+        int id PK
+        string email UK
+        string password
+        string name
+        string userType
+        string role
+        string location
+        float rating
+        datetime createdAt
+    }
+    
+    Book {
+        int id PK
+        string title
+        string author
+        string isbn UK
+        string category
+        string ageRange
+        string schoolLevel
+        string language
+    }
+    
+    Listing {
+        int id PK
+        float price
+        string condition
+        string status
+        datetime createdAt
+        int userId FK
+        int bookId FK
+    }
+    
+    Transaction {
+        int id PK
+        float amount
+        string status
+        datetime createdAt
+        int buyerId FK
+        int sellerId FK
+        int listingId FK
+    }
+    
+    Review {
+        int id PK
+        int rating
+        string comment
+        datetime createdAt
+        int reviewerId FK
+        int revieweeId FK
+        int transactionId FK
+    }
