@@ -9,48 +9,143 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+   //url      = env("DATABASE_URL")
 }
 
 // ========================================
 // MODÈLES
 // ========================================
 
-model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  password  String
-  name      String?
-  role      Role     @default(USER)
-  isActive  Boolean  @default(true) @map("is_active")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime? @updatedAt @map("updated_at")
-
-  // Relations
-  posts     Post[]
-
-  @@map("users")  // Nom de la table en DB
+enum UserType {
+  TEACHER
+  PARENT
+  STUDENT
+  READER
+  SELLER
+  GENERAL
 }
-
-model Post {
-  id        String   @id @default(cuid())
-  title     String
-  content   String?
-  published Boolean  @default(false)
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  // Relation avec User
-  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  authorId  String   @map("author_id")
-
-  @@map("posts")
-}
-
-// ========================================
-// ENUMS
-// ========================================
 
 enum Role {
   USER
   ADMIN
+  MODERATOR
+}
+
+enum BookCategory {
+  EDUCATIONAL
+  CHILDREN
+  TEXTBOOK
+  NOVEL
+  COMIC
+  NON_FICTION
+  OTHER
+}
+
+enum Condition {
+  NEW
+  VERY_GOOD
+  GOOD
+  ACCEPTABLE
+}
+
+enum ListingStatus {
+  ACTIVE
+  RESERVED
+  SOLD
+  ARCHIVED
+}
+
+enum TransactionStatus {
+  PENDING
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String
+  userType  String   // "TEACHER", "PARENT", "STUDENT", "READER"
+  location  String?
+  rating    Float    @default(5.0)
+  createdAt DateTime @default(now())
+  role      String   @default("USER") // "USER", "ADMIN", "MODERATOR" 
+  // Relations
+  listings        Listing[]
+  purchases       Transaction[] @relation("Buyer")
+  sales           Transaction[] @relation("Seller")
+  reviewsGiven    Review[]      @relation("Reviewer")
+  reviewsReceived Review[]      @relation("Reviewee")
+}
+
+model Book {
+  id          Int      @id @default(autoincrement())
+  title       String
+  author      String
+  isbn        String?  @unique
+  category    String   // "EDUCATIONAL", "CHILDREN", "TEXTBOOK", "NOVEL"
+  ageRange    String?  // "0-2", "3-5", "6-8", "9-12", "13-17"
+  schoolLevel String?  // "maternelle", "primaire", "secondaire", "cegep"
+  language    String   @default("fr")
+  
+  // Relations
+  listings    Listing[]
+}
+
+model Listing {
+  id        Int      @id @default(autoincrement())
+  price     Float
+  condition String   // "NEW", "VERY_GOOD", "GOOD", "ACCEPTABLE"
+  status    String   @default("ACTIVE") // "ACTIVE", "RESERVED", "SOLD", "ARCHIVED"
+  createdAt DateTime @default(now())
+  
+  // Relations
+  userId      Int
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  bookId      Int
+  book        Book        @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  
+  transaction Transaction?
+}
+
+model Transaction {
+  id        Int      @id @default(autoincrement())
+  amount    Float
+  status    String   @default("PENDING") // "PENDING", "CONFIRMED", "COMPLETED", "CANCELLED"
+  createdAt DateTime @default(now())
+  
+  // Relations
+  buyerId    Int
+  buyer      User    @relation("Buyer", fields: [buyerId], references: [id], onDelete: Cascade)
+  
+  sellerId   Int
+  seller     User    @relation("Seller", fields: [sellerId], references: [id], onDelete: Cascade)
+  
+  listingId  Int     @unique
+  listing    Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  
+  review     Review?
+  
+  @@unique([buyerId, sellerId, listingId], name: "unique_transaction")
+}
+
+model Review {
+  id             Int      @id @default(autoincrement())
+  rating         Int      //@check(rating >= 1 && rating <= 5)
+  comment        String?
+  createdAt      DateTime @default(now())
+  
+  // Relations
+  reviewerId     Int
+  reviewer       User       @relation("Reviewer", fields: [reviewerId], references: [id], onDelete: Cascade)
+  
+  revieweeId     Int
+  reviewee       User       @relation("Reviewee", fields: [revieweeId], references: [id], onDelete: Cascade)
+  
+  transactionId  Int      @unique
+  transaction    Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+  
+  @@unique([reviewerId, transactionId], name: "one_review_per_transaction_per_user")
 }
