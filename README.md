@@ -19,7 +19,7 @@ Marketplace C2C de livres d'occasion avec spécialisation éducative.
 3. Copier `.env.example` vers `.env`
 4. Configurer DATABASE_URL Neon
 5. `npx prisma migrate dev`
-6. `npm run seed`
+6. `npx tsx prisma/seed.ts`
 7. `npm run dev`
 
 ## Structure MVC
