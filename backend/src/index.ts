@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import { clerkAuth } from './middleware/clerk.middleware'; // Import du middleware Clerk
 
 // Routes
 import userRoutes from './routes/user.routes';
@@ -13,21 +14,37 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  credentials: true
+}));
 app.use(express.json());
 
-// Route de base
+// Clerk middleware - AJOUTÉ
+//app.use(clerkAuth);
+
+// Routes publiques
 app.get('/', (req, res) => {
-  res.json({
-    message: 'Bienvenue sur l\'API ReLire 📚',
-    version: '1.0.0',
-    endpoints: {
-      users: '/users',
-      books: '/books',
-      listings: '/listings'
-    }
-  });
+  res.json({ message: 'Bienvenue sur ReLire API' });
 });
+
+
+// Middleware
+// app.use(cors());
+// app.use(express.json());
+
+// Route de base
+// app.get('/', (req, res) => {
+//   res.json({
+//     message: 'Bienvenue sur l\'API ReLire 📚',
+//     version: '1.0.0',
+//     endpoints: {
+//       users: '/users',
+//       books: '/books',
+//       listings: '/listings'
+//     }
+//   });
+// });
 
 // Routes API
 app.use('/users', userRoutes);

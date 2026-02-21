@@ -7,9 +7,9 @@ Content-Type: application/json
 
 {
   
-  "email": "maysoun@example.com",
-  "userType": "TEACHER",
-  "name": "mayssoun",
+  "email": "sonia.parent@example.com",
+  "userType": "Parent",
+  "name": "sonia",
   "location": "montreal"
 }
 ###
@@ -22,7 +22,7 @@ Content-Type: application/json
 }
 ###
 DELETE http://localhost:3000/users/9
-###
+
 #####################################
 get http://localhost:3000/books  
 ###
