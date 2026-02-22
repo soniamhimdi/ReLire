@@ -15,6 +15,7 @@ class ApiService {
     this.api = axios.create({
       baseURL: API_URL,
       timeout: 10000,
+      withCredentials: true,
       headers: {
         'Content-Type': 'application/json',
       },
@@ -84,9 +85,9 @@ class ApiService {
     return response.data;
   }
 
-  async searchUsers(params: { email?: string; type?: string; location?: string }): Promise<User[]> {
+  async searchUsers(params: { email?: string; clerkId?: string; type?: string; location?: string }): Promise<User[]> {
     const response = await this.api.get('/users/search', { params });
-    return response.data;
+    return response.data?.data ?? response.data;
   }
 
   async getUserReviews(id: number): Promise<Review[]> {

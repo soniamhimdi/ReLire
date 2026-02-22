@@ -1,0 +1,114 @@
+/* Book Filters Panel Styles */
+.filters-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.filters-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--sage);
+}
+
+.filters-header h3 {
+  font-size: 1.3rem;
+  color: var(--olive-dark);
+  font-weight: 700;
+  margin: 0;
+}
+
+.btn-reset {
+  padding: 0.4rem 1rem;
+  background: rgba(194, 112, 77, 0.1);
+  border: 1px solid var(--terracotta);
+  border-radius: 999px;
+  color: var(--terracotta);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-reset:hover {
+  background: rgba(194, 112, 77, 0.2);
+  transform: scale(1.05);
+}
+
+/* Filter Group */
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.filter-group label {
+  font-weight: 600;
+  color: var(--olive-dark);
+  font-size: 0.95rem;
+}
+
+.filter-group select,
+.filter-group input {
+  padding: 0.75rem 1rem;
+  border: 1.5px solid var(--sage);
+  border-radius: var(--radius-sm);
+  background: var(--white);
+  color: var(--text-color);
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+.filter-group select:focus,
+.filter-group input:focus {
+  outline: none;
+  border-color: var(--olive-green);
+  box-shadow: 0 0 0 3px rgba(84, 108, 69, 0.1);
+}
+
+.filter-group select:hover,
+.filter-group input:hover {
+  border-color: var(--olive-green);
+}
+
+/* Price Inputs */
+.price-inputs {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.price-inputs span {
+  color: var(--muted);
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.price-inputs input {
+  width: 100%;
+}
+
+/* Responsive */
+@media (max-width: 968px) {
+  .filters-panel {
+    padding: 1.5rem;
+  }
+
+  .price-inputs {
+    grid-template-columns: 1fr auto 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .price-inputs {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .price-inputs span {
+    display: none;
+  }
+}

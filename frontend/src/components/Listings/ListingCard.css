@@ -1,0 +1,148 @@
+.listing-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.listing-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.listing-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.listing-header h3 {
+  font-size: 1.25rem;
+  color: #2d3748;
+  margin: 0;
+  flex: 1;
+}
+
+.status {
+  padding: 0.25rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.status-active {
+  background-color: #c6f6d5;
+  color: #22543d;
+}
+
+.status-reserved {
+  background-color: #fef3c7;
+  color: #78350f;
+}
+
+.status-sold {
+  background-color: #e5e7eb;
+  color: #1f2937;
+}
+
+.status-archived {
+  background-color: #f3f4f6;
+  color: #6b7280;
+}
+
+.book-author {
+  color: #718096;
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.listing-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 0.5rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+.price {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #2d3748;
+  margin: 0;
+}
+
+.condition {
+  font-size: 0.875rem;
+  color: #718096;
+  background-color: #f7fafc;
+  padding: 0.375rem 0.75rem;
+  border-radius: 6px;
+  margin: 0;
+}
+
+.seller-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+.seller-name {
+  font-size: 0.875rem;
+  color: #4a5568;
+  margin: 0;
+  font-weight: 500;
+}
+
+.seller-rating {
+  font-size: 0.875rem;
+  color: #718096;
+  margin: 0;
+}
+
+.seller-location {
+  font-size: 0.875rem;
+  color: #718096;
+  margin: 0;
+}
+
+.btn-view {
+  display: block;
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #667eea;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 600;
+  margin-top: 0.5rem;
+  transition: background-color 0.3s ease;
+}
+
+.btn-view:hover {
+  background-color: #5568d3;
+}
+
+@media (max-width: 768px) {
+  .listing-card {
+    padding: 1.25rem;
+  }
+
+  .listing-header h3 {
+    font-size: 1.125rem;
+  }
+
+  .price {
+    font-size: 1.25rem;
+  }
+}

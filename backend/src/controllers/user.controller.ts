@@ -69,7 +69,7 @@ export class UserController {
   
   async createUser(req: Request, res: Response) {
     try {
-      const { email, name, userType, location } = req.body;
+      const { email, name, userType, location, clerkId } = req.body;
       
       if (!email || !name || !userType) {
         return res.status(400).json({ error: 'Email, nom et type requis' });
@@ -81,7 +81,7 @@ export class UserController {
       }
       
       const user = await prisma.user.create({
-        data: { email, name, userType, location },
+        data: { email, name, userType, location, clerkId },
         select: {
           id: true,
           email: true,
@@ -196,7 +196,7 @@ export class UserController {
    */
   async searchUsers(req: Request, res: Response) {
     try {
-      const { type, location, minRating, page = '1', limit = '20' } = req.query;
+      const { type, location, minRating, page = '1', limit = '20', email, clerkId } = req.query;
       
       const pageNum = parseInt(page as string);
       const limitNum = parseInt(limit as string);
@@ -208,6 +208,12 @@ export class UserController {
       if (type) where.userType = type;
       if (location) where.location = { contains: location, mode: 'insensitive' };
       if (minRating) where.rating = { gte: parseFloat(minRating as string) };
+      if (email) {
+        where.email = { equals: email as string, mode: 'insensitive' };
+      }
+      if (clerkId) {
+        where.clerkId = clerkId as string;
+      }
       
       // Recherche avec pagination
       const [users, total] = await Promise.all([

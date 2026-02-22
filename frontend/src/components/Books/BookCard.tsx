@@ -1,25 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import type { BookCardProps } from '../../types';
 import './BookCard.css';
 
-const BookCard: React.FC<BookCardProps> = ({ book, onSelect }) => {
-  const handleClick = () => {
-    if (onSelect) {
-      onSelect(book);
+const BookCard: React.FC<BookCardProps> = ({ book }) => {
+  const [imageError, setImageError] = useState(false);
+
+  const handleImageError = () => {
+    if (!imageError) {
+      setImageError(true);
     }
   };
 
   return (
-    <div className="book-card" onClick={handleClick}>
+    <div className="book-card">
       <div className="book-cover">
         <img 
-          src={book.coverImage || '/default-book.jpg'} 
+          src={imageError ? 'https://via.placeholder.com/240x210/d9e2d2/546c45?text=Livre' : (book.coverImage || 'https://via.placeholder.com/240x210/d9e2d2/546c45?text=Livre')} 
           alt={book.title}
-          onError={(e) => {
-            const target = e.target as HTMLImageElement;
-            target.src = '/default-book.jpg';
-          }}
+          onError={handleImageError}
         />
       </div>
       <div className="book-info">
@@ -30,7 +29,11 @@ const BookCard: React.FC<BookCardProps> = ({ book, onSelect }) => {
         <p className="listings">
           {book._count?.listings || 0} annonce(s)
         </p>
-        <Link to={`/books/${book.id}`} className="btn-details">
+        <Link 
+          to={`/books/${book.id}`} 
+          className="btn-details"
+          onClick={(e) => e.stopPropagation()}
+        >
           Voir détails
         </Link>
       </div>
@@ -38,4 +41,4 @@ const BookCard: React.FC<BookCardProps> = ({ book, onSelect }) => {
   );
 };
 
-export default BookCard;
+export default React.memo(BookCard);

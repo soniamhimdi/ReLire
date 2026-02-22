@@ -1,0 +1,337 @@
+/* Listing Form Page */
+.listing-form-page {
+  min-height: 100vh;
+  background: radial-gradient(circle at 20% 10%, #fef6ea 0%, #f7f3ea 45%, #f1efe6 100%);
+  padding: 3rem 1.5rem 4rem;
+}
+
+.form-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.form-container h1 {
+  font-family: 'Merriweather', serif;
+  font-size: 2.5rem;
+  color: var(--olive-dark);
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+/* Error Message */
+.error-message {
+  background: #fee;
+  border: 2px solid #c53030;
+  color: #c53030;
+  padding: 1rem;
+  border-radius: var(--radius-md);
+  margin-bottom: 2rem;
+  text-align: center;
+  font-weight: 600;
+}
+
+/* Form Sections */
+.listing-form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.form-section {
+  background: var(--white);
+  padding: 2rem;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-soft);
+}
+
+.form-section h2 {
+  font-size: 1.5rem;
+  color: var(--olive-dark);
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid var(--sage);
+  padding-bottom: 0.75rem;
+}
+
+.form-section h3 {
+  font-size: 1.2rem;
+  color: var(--olive-green);
+  margin-bottom: 1rem;
+}
+
+/* Book Search */
+.book-search {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.search-inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr auto;
+  gap: 0.75rem;
+  align-items: stretch;
+}
+
+.search-inputs input {
+  padding: 0.75rem 1rem;
+  border: 1.5px solid var(--sage);
+  border-radius: var(--radius-sm);
+  font-size: 0.95rem;
+}
+
+.btn-search {
+  padding: 0.75rem 1.5rem;
+  background: var(--olive-green);
+  color: var(--white);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  height: 100%;
+  min-width: 130px;
+}
+
+.btn-search:hover:not(:disabled) {
+  background: var(--olive-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
+}
+
+.btn-search:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Search Results */
+.search-results {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.books-list {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.book-item {
+  padding: 1rem;
+  border: 2px solid var(--sage);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.book-item:hover {
+  border-color: var(--olive-green);
+  background: rgba(84, 108, 69, 0.05);
+  transform: translateX(5px);
+}
+
+.book-item.selected {
+  border-color: var(--olive-green);
+  background: rgba(84, 108, 69, 0.1);
+}
+
+.book-item h4 {
+  font-size: 1.1rem;
+  color: var(--olive-dark);
+  margin-bottom: 0.25rem;
+}
+
+.book-item p {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.category-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  background: var(--secondary-color);
+  color: var(--olive-dark);
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+/* Create Book Section */
+.create-book-section {
+  background: rgba(217, 226, 210, 0.3);
+  padding: 1.5rem;
+  border-radius: var(--radius-md);
+  border: 2px dashed var(--olive-green);
+}
+
+.new-book-form {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.new-book-form input,
+.new-book-form select {
+  padding: 0.75rem 1rem;
+  border: 1.5px solid var(--sage);
+  border-radius: var(--radius-sm);
+  font-size: 0.95rem;
+}
+
+.btn-create-book {
+  padding: 0.75rem 1.5rem;
+  background: var(--terracotta);
+  color: var(--white);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 0.5rem;
+}
+
+.btn-create-book:hover:not(:disabled) {
+  background: var(--clay);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
+}
+
+.btn-create-book:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Selected Book */
+.selected-book {
+  background: rgba(84, 108, 69, 0.1);
+  padding: 1.5rem;
+  border-radius: var(--radius-md);
+  border: 2px solid var(--olive-green);
+}
+
+.book-details h4 {
+  font-size: 1.2rem;
+  color: var(--olive-dark);
+  margin-bottom: 0.25rem;
+}
+
+.book-details p {
+  color: var(--muted);
+}
+
+/* Form Groups */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.form-group:last-child {
+  margin-bottom: 0;
+}
+
+.form-group label {
+  font-weight: 600;
+  color: var(--olive-dark);
+  font-size: 1rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 0.75rem 1rem;
+  border: 1.5px solid var(--sage);
+  border-radius: var(--radius-sm);
+  font-size: 0.95rem;
+  font-family: inherit;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--olive-green);
+  box-shadow: 0 0 0 3px rgba(84, 108, 69, 0.1);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+/* Form Actions */
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 2rem;
+}
+
+.btn-cancel {
+  padding: 0.85rem 1.8rem;
+  background: transparent;
+  color: var(--muted);
+  border: 2px solid var(--sage);
+  border-radius: 999px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-cancel:hover {
+  background: var(--sage);
+  color: var(--olive-dark);
+}
+
+.btn-submit {
+  padding: 0.85rem 2rem;
+  background: var(--olive-green);
+  color: var(--white);
+  border: none;
+  border-radius: 999px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 1rem;
+}
+
+.btn-submit:hover:not(:disabled) {
+  background: var(--olive-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
+}
+
+.btn-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .listing-form-page {
+    padding: 2rem 1rem 3rem;
+  }
+
+  .form-container h1 {
+    font-size: 2rem;
+  }
+
+  .form-section {
+    padding: 1.5rem;
+  }
+
+  .search-inputs {
+    grid-template-columns: 1fr;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+  }
+
+  .btn-cancel,
+  .btn-submit {
+    width: 100%;
+  }
+}

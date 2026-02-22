@@ -1,12 +1,8 @@
-/*
-  Warnings:
-
-  - You are about to drop the `posts` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `users` table. If the table is not empty, all the data it contains will be lost.
-
-*/
 -- CreateEnum
 CREATE TYPE "UserType" AS ENUM ('TEACHER', 'PARENT', 'STUDENT', 'READER', 'SELLER', 'GENERAL');
+
+-- CreateEnum
+CREATE TYPE "Role" AS ENUM ('USER', 'ADMIN', 'MODERATOR');
 
 -- CreateEnum
 CREATE TYPE "BookCategory" AS ENUM ('EDUCATIONAL', 'CHILDREN', 'TEXTBOOK', 'NOVEL', 'COMIC', 'NON_FICTION', 'OTHER');
@@ -20,21 +16,10 @@ CREATE TYPE "ListingStatus" AS ENUM ('ACTIVE', 'RESERVED', 'SOLD', 'ARCHIVED');
 -- CreateEnum
 CREATE TYPE "TransactionStatus" AS ENUM ('PENDING', 'CONFIRMED', 'COMPLETED', 'CANCELLED');
 
--- AlterEnum
-ALTER TYPE "Role" ADD VALUE 'MODERATOR';
-
--- DropForeignKey
-ALTER TABLE "posts" DROP CONSTRAINT "posts_author_id_fkey";
-
--- DropTable
-DROP TABLE "posts";
-
--- DropTable
-DROP TABLE "users";
-
 -- CreateTable
 CREATE TABLE "User" (
     "id" SERIAL NOT NULL,
+    "clerkId" TEXT,
     "email" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "userType" TEXT NOT NULL,
@@ -98,6 +83,9 @@ CREATE TABLE "Review" (
 
     CONSTRAINT "Review_pkey" PRIMARY KEY ("id")
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_clerkId_key" ON "User"("clerkId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");

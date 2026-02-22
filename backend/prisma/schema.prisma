@@ -64,6 +64,7 @@ enum TransactionStatus {
 
 model User {
   id        Int      @id @default(autoincrement())
+  clerkId   String?  @unique
   email     String   @unique
   name      String
   userType  String   // "TEACHER", "PARENT", "STUDENT", "READER"

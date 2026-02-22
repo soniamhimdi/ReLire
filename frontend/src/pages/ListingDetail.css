@@ -1,0 +1,396 @@
+.listing-detail-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+.breadcrumb {
+  margin-bottom: 2rem;
+  color: #718096;
+  font-size: 0.95rem;
+}
+
+.breadcrumb a {
+  color: #667eea;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.breadcrumb a:hover {
+  color: #5568d3;
+  text-decoration: underline;
+}
+
+.breadcrumb span {
+  margin: 0 0.5rem;
+}
+
+.listing-detail-container {
+  display: grid;
+  grid-template-columns: 400px 1fr;
+  gap: 2rem;
+}
+
+.book-section {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  height: fit-content;
+  position: sticky;
+  top: 2rem;
+}
+
+.book-cover-container {
+  width: 100%;
+  aspect-ratio: 2/3;
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  margin-bottom: 1.5rem;
+}
+
+.book-cover-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.book-info-section h1 {
+  font-size: 1.75rem;
+  color: #2d3748;
+  margin-bottom: 0.5rem;
+}
+
+.book-author {
+  font-size: 1.125rem;
+  color: #718096;
+  margin-bottom: 1.5rem;
+}
+
+.btn-view-book {
+  width: 100%;
+  padding: 0.875rem;
+  background-color: #f7fafc;
+  color: #667eea;
+  border: 2px solid #667eea;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-view-book:hover {
+  background-color: #667eea;
+  color: white;
+}
+
+.listing-details-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.price-status-bar {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.price-large {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #2d3748;
+}
+
+.status-badge {
+  padding: 0.5rem 1.25rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.status-active {
+  background-color: #c6f6d5;
+  color: #22543d;
+}
+
+.status-reserved {
+  background-color: #fef3c7;
+  color: #78350f;
+}
+
+.status-sold {
+  background-color: #e5e7eb;
+  color: #1f2937;
+}
+
+.status-archived {
+  background-color: #f3f4f6;
+  color: #6b7280;
+}
+
+.detail-card,
+.seller-card {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.detail-card h2,
+.seller-card h2 {
+  font-size: 1.5rem;
+  color: #2d3748;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid #f7fafc;
+}
+
+.detail-row:last-child {
+  border-bottom: none;
+}
+
+.detail-row .label {
+  font-weight: 600;
+  color: #4a5568;
+}
+
+.detail-row .value {
+  color: #2d3748;
+}
+
+.condition-badge {
+  padding: 0.375rem 0.875rem;
+  background-color: #e6fffa;
+  color: #234e52;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.description-section {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 2px solid #e2e8f0;
+}
+
+.description-section h3 {
+  font-size: 1.125rem;
+  color: #2d3748;
+  margin-bottom: 0.75rem;
+}
+
+.description-section p {
+  color: #4a5568;
+  line-height: 1.7;
+}
+
+.seller-info {
+  margin-bottom: 1.5rem;
+}
+
+.seller-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.seller-header h3 {
+  font-size: 1.25rem;
+  color: #2d3748;
+  margin: 0;
+}
+
+.seller-rating {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #2d3748;
+}
+
+.seller-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.seller-meta {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.badge-usertype {
+  padding: 0.375rem 0.875rem;
+  background-color: #e6f7ff;
+  color: #0066cc;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.seller-location {
+  color: #4a5568;
+  font-size: 0.95rem;
+}
+
+.seller-transactions {
+  color: #718096;
+  font-size: 0.95rem;
+}
+
+.action-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.btn-contact,
+.btn-reserve {
+  padding: 0.875rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-contact {
+  background-color: white;
+  color: #667eea;
+  border: 2px solid #667eea;
+}
+
+.btn-contact:hover {
+  background-color: #f7fafc;
+}
+
+.btn-reserve {
+  background-color: #667eea;
+  color: white;
+}
+
+.btn-reserve:hover {
+  background-color: #5568d3;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.status-message {
+  padding: 1rem;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: 600;
+  margin-top: 1.5rem;
+}
+
+.status-message.reserved {
+  background-color: #fef3c7;
+  color: #78350f;
+}
+
+.status-message.sold {
+  background-color: #e5e7eb;
+  color: #1f2937;
+}
+
+.loading-container,
+.error-container {
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.spinner {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  border: 4px solid rgba(102, 126, 234, 0.2);
+  border-top-color: #667eea;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.error-container h2 {
+  color: #e53e3e;
+  font-size: 2rem;
+}
+
+.error-container p {
+  color: #718096;
+  font-size: 1.125rem;
+  margin-bottom: 1.5rem;
+}
+
+.btn-back {
+  padding: 0.875rem 2rem;
+  background-color: #667eea;
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.btn-back:hover {
+  background-color: #5568d3;
+}
+
+@media (max-width: 992px) {
+  .listing-detail-container {
+    grid-template-columns: 1fr;
+  }
+
+  .book-section {
+    position: static;
+  }
+
+  .action-buttons {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .listing-detail-page {
+    padding: 1.5rem 1rem;
+  }
+
+  .price-status-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .price-large {
+    font-size: 2rem;
+  }
+
+  .book-info-section h1 {
+    font-size: 1.5rem;
+  }
+}
