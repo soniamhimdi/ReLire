@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { api } from "../services/api";
+import { useClerkAuth } from "../contexts/useClerkAuth";
 import type { ListingDetails } from "../types";
 import "./ListingDetail.css";
 
@@ -10,6 +11,9 @@ const ListingDetailPage = () => {
   const [listing, setListing] = useState<ListingDetails | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [reserving, setReserving] = useState(false);
+  const [canceling, setCanceling] = useState(false);
+  const { dbUser } = useClerkAuth();
 
   useEffect(() => {
     if (id) {
@@ -28,6 +32,47 @@ const ListingDetailPage = () => {
       setError("Impossible de charger les détails de l'annonce.");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleReserve = async () => {
+    if (!listing || !id) return;
+    
+    try {
+      setReserving(true);
+      await api.updateListingStatus(parseInt(id), 'RESERVED');
+      // Recharger les détails pour obtenir le statut mis à jour
+      await loadListingDetails(parseInt(id));
+      alert('Livre réservé avec succès !');
+    } catch (err) {
+      console.error("Erreur lors de la réservation:", err);
+      alert("Impossible de réserver ce livre. Veuillez réessayer.");
+    } finally {
+      setReserving(false);
+    }
+  };
+
+  const handleCancelReservation = async () => {
+    if (!listing || !id) return;
+
+    try {
+      setCanceling(true);
+      await api.updateListingStatus(parseInt(id), 'ACTIVE');
+      await loadListingDetails(parseInt(id));
+      alert('Reservation annulee avec succes.');
+    } catch (err) {
+      console.error("Erreur lors de l'annulation:", err);
+      alert("Impossible d'annuler la reservation. Veuillez reessayer.");
+    } finally {
+      setCanceling(false);
+    }
+  };
+
+  const handleContact = () => {
+    if (listing?.user.email) {
+      window.location.href = `mailto:${listing.user.email}?subject=À propos de: ${listing.book.title}`;
+    } else {
+      alert("Aucune adresse email disponible pour ce vendeur.");
     }
   };
 
@@ -82,6 +127,10 @@ const ListingDetailPage = () => {
       currency: 'CAD'
     }).format(price);
   };
+
+  const isOwner = dbUser?.id === listing.user.id;
+  const isBuyer = dbUser?.id === listing.transaction?.buyer?.id;
+  const canCancelReservation = listing.status === 'RESERVED' && (isOwner || isBuyer);
 
   return (
     <div className="listing-detail-page">
@@ -184,19 +233,39 @@ const ListingDetailPage = () => {
 
             {listing.status === 'ACTIVE' && (
               <div className="action-buttons">
-                <button className="btn-contact">
+                <button 
+                  className="btn-contact"
+                  onClick={handleContact}
+                >
                   Contacter le vendeur
                 </button>
-                <button className="btn-reserve">
-                  Réserver
-                </button>
+                {!isOwner && (
+                  <button 
+                    className="btn-reserve"
+                    onClick={handleReserve}
+                    disabled={reserving}
+                  >
+                    {reserving ? 'Reservation...' : 'Reserver'}
+                  </button>
+                )}
               </div>
             )}
 
             {listing.status === 'RESERVED' && (
-              <p className="status-message reserved">
-                Cette annonce est actuellement réservée.
-              </p>
+              <div>
+                <p className="status-message reserved">
+                  Cette annonce est actuellement reservee.
+                </p>
+                {canCancelReservation && (
+                  <button
+                    className="btn-cancel-reservation"
+                    onClick={handleCancelReservation}
+                    disabled={canceling}
+                  >
+                    {canceling ? 'Annulation...' : 'Annuler la reservation'}
+                  </button>
+                )}
+              </div>
             )}
 
             {listing.status === 'SOLD' && (

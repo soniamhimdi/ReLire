@@ -299,24 +299,19 @@ export class UserController {
     try {
       const userId = Number(req.params.id);
 
-      const user = await prisma.user.findUnique({
+      // Vérifier que l'utilisateur existe
+      const userExists = await prisma.user.findUnique({
         where: { id: userId },
-        select: {
-          id: true,
-          name: true,
-          userType: true,
-          location: true,
-          createdAt: true
-        }
+        select: { id: true }
       });
 
-      if (!user) {
+      if (!userExists) {
         return res.status(404).json({ error: 'Utilisateur non trouvé' });
       }
 
-      const [activeListings, completedSales, completedPurchases, reviewStats] = await Promise.all([
+      const [totalListings, totalSales, totalPurchases, reviewStats] = await Promise.all([
         prisma.listing.count({
-          where: { userId, status: 'ACTIVE' }
+          where: { userId }
         }),
         prisma.transaction.count({
           where: { sellerId: userId, status: 'COMPLETED' }
@@ -332,15 +327,12 @@ export class UserController {
       ]);
 
       res.json({
-        user,
-        stats: {
-          activeListings,
-          completedSales,
-          completedPurchases,
-          totalTransactions: completedSales + completedPurchases,
-          averageRating: reviewStats._avg.rating ?? 0,
-          totalReviews: reviewStats._count.rating
-        }
+        totalListings,
+        totalSales,
+        totalPurchases,
+        totalTransactions: totalSales + totalPurchases,
+        averageRating: reviewStats._avg.rating ?? 0,
+        totalReviews: reviewStats._count.rating
       });
     } catch (error) {
       console.error('Erreur stats utilisateur:', error);

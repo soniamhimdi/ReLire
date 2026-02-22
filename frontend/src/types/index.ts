@@ -99,7 +99,7 @@ export interface ListingDetails extends Listing {
   transaction?: {
     id: number;
     status: TransactionStatus;
-    buyer: { name: string };
+    buyer: { id: number; name: string };
   };
 }
 

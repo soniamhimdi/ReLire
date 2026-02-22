@@ -14,6 +14,16 @@ const ListingCard: React.FC<ListingCardProps> = ({ listing, onSelect }) => {
     return labels[condition] || condition;
   };
 
+  const getStatusLabel = (status: string): string => {
+    const labels: Record<string, string> = {
+      'ACTIVE': 'Disponible',
+      'RESERVED': 'Réservé',
+      'SOLD': 'Vendu',
+      'ARCHIVED': 'Archivé'
+    };
+    return labels[status] || status;
+  };
+
   const formatPrice = (price: number): string => {
     return new Intl.NumberFormat('fr-CA', {
       style: 'currency',
@@ -32,7 +42,7 @@ const ListingCard: React.FC<ListingCardProps> = ({ listing, onSelect }) => {
       <div className="listing-header">
         <h3>{listing.book.title}</h3>
         <span className={`status status-${listing.status.toLowerCase()}`}>
-          {listing.status}
+          {getStatusLabel(listing.status)}
         </span>
       </div>
       

@@ -17,7 +17,7 @@ router.get('/recommended', ListingController.getRecommendedListings);
 router.get('/:id', ListingController.getListingById);
 // Routes protégées
 // POST /listings - Créer une annonce
-router.post('/',clerkRequireAuth, ListingController.createListing);
+router.post('/', clerkRequireAuth, ListingController.createListing);
 
 // PUT /listings/:id - Mettre à jour
 router.put('/:id', clerkRequireAuth, isClerkOwner, ListingController.updateListing);

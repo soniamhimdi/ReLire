@@ -1,5 +1,6 @@
 import type { Request, Response } from 'express';
 import prisma from '../prisma/prisma.js';
+import { getUserId, type ClerkRequest } from '../middleware/clerk.middleware.js';
 export class ListingController {
   
   async getAllListings(req: Request, res: Response) {
@@ -21,10 +22,12 @@ export class ListingController {
           id: true,
           price: true,
           condition: true,
+          description: true,
           status: true,
           createdAt: true,
           user: {
             select: {
+              id: true,
               name: true,
               userType: true,
               rating: true,
@@ -33,6 +36,7 @@ export class ListingController {
           },
           book: {
             select: {
+              id: true,
               title: true,
               author: true,
               category: true
@@ -64,6 +68,7 @@ export class ListingController {
           id: true,
           price: true,
           condition: true,
+          description: true,
           status: true,
           createdAt: true,
           user: {
@@ -92,6 +97,7 @@ export class ListingController {
               status: true,
               buyer: {
                 select: {
+                  id: true,
                   name: true
                 }
               }
@@ -113,7 +119,7 @@ export class ListingController {
   
   async createListing(req: Request, res: Response) {
     try {
-      const { userId, bookId, price, condition } = req.body;
+      const { userId, bookId, price, condition, description } = req.body;
       
       if (!userId || !bookId || !price || !condition) {
         return res.status(400).json({ error: 'Tous les champs requis' });
@@ -133,6 +139,7 @@ export class ListingController {
         data: {
           price: parseFloat(price),
           condition,
+          description: description || null,
           userId: parseInt(userId),
           bookId: parseInt(bookId)
         },
@@ -140,6 +147,7 @@ export class ListingController {
           id: true,
           price: true,
           condition: true,
+          description: true,
           status: true,
           createdAt: true,
           user: {
@@ -284,6 +292,7 @@ export class ListingController {
             id: true,
             price: true,
             condition: true,
+            description: true,
             status: true,
             createdAt: true,
             user: {
@@ -580,7 +589,7 @@ export class ListingController {
    * CHANGER le statut d'une annonce
    * PATCH /listings/:id/status
    */
-  async updateListingStatus(req: Request, res: Response) {
+  async updateListingStatus(req: ClerkRequest, res: Response) {
     try {
       const listingId = Number(req.params.id);
       // const { id } = req.params;
@@ -593,16 +602,123 @@ export class ListingController {
         });
       }
       
+      const clerkUserId = getUserId(req);
+      if (!clerkUserId) {
+        return res.status(401).json({ error: 'Non authentifie' });
+      }
+
+      const currentUser = await prisma.user.findUnique({
+        where: { clerkId: clerkUserId }
+      });
+
+      if (!currentUser) {
+        return res.status(404).json({ error: 'Utilisateur non trouve' });
+      }
+
       // Vérifier si l'annonce existe
       const listing = await prisma.listing.findUnique({
         where: { id: listingId },
         include: {
-          transaction: true
+          user: {
+            select: {
+              id: true,
+              clerkId: true
+            }
+          },
+          transaction: {
+            select: {
+              id: true,
+              buyerId: true,
+              sellerId: true
+            }
+          }
         }
       });
       
       if (!listing) {
         return res.status(404).json({ error: 'Annonce non trouvée' });
+      }
+
+      if (status === 'RESERVED') {
+        if (listing.userId === currentUser.id) {
+          return res.status(403).json({ error: 'Impossible de reserver votre propre annonce' });
+        }
+
+        if (listing.status !== 'ACTIVE') {
+          return res.status(400).json({ error: 'Annonce deja reservee ou indisponible' });
+        }
+
+        if (listing.transaction) {
+          return res.status(400).json({ error: 'Transaction deja associee a cette annonce' });
+        }
+
+        const [, updatedListing] = await prisma.$transaction([
+          prisma.transaction.create({
+            data: {
+              amount: listing.price,
+              status: 'PENDING',
+              buyerId: currentUser.id,
+              sellerId: listing.userId,
+              listingId: listing.id
+            }
+          }),
+          prisma.listing.update({
+            where: { id: listingId },
+            data: { status },
+            include: {
+              book: {
+                select: { title: true }
+              }
+            }
+          })
+        ]);
+
+        return res.json({
+          message: 'Annonce reservee',
+          listing: updatedListing
+        });
+      }
+
+      if (status === 'ACTIVE' && listing.status === 'RESERVED') {
+        const canCancel =
+          currentUser.id === listing.userId ||
+          (listing.transaction && listing.transaction.buyerId === currentUser.id);
+
+        if (!canCancel) {
+          return res.status(403).json({ error: 'Annulation non autorisee' });
+        }
+
+        let updatedListing;
+
+        if (listing.transaction) {
+          [, updatedListing] = await prisma.$transaction([
+            prisma.transaction.delete({ where: { id: listing.transaction.id } }),
+            prisma.listing.update({
+              where: { id: listingId },
+              data: { status: 'ACTIVE' },
+              include: {
+                book: {
+                  select: { title: true }
+                }
+              }
+            })
+          ]);
+        } else {
+          updatedListing = await prisma.listing.update({
+            where: { id: listingId },
+            data: { status: 'ACTIVE' },
+            include: {
+              book: {
+                select: { title: true }
+              }
+            }
+          });
+        }
+
+        return res.json({
+          message: 'Reservation annulee',
+          listing: updatedListing
+        });
       }
       
       // Vérifier les contraintes selon le nouveau statut

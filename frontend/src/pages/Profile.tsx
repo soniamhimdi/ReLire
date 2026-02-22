@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useClerkAuth } from "../contexts/useClerkAuth";
 import { api } from "../services/api";
 import type { UserStats, Listing } from "../types";
@@ -12,13 +12,7 @@ const ProfilePage = () => {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<"info" | "listings" | "stats">("info");
 
-  useEffect(() => {
-    if (isLoaded && dbUser) {
-      loadProfileData();
-    }
-  }, [isLoaded, dbUser]);
-
-  const loadProfileData = async () => {
+  const loadProfileData = useCallback(async () => {
     if (!dbUser) return;
 
     try {
@@ -42,7 +36,19 @@ const ProfilePage = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [dbUser]);
+
+  useEffect(() => {
+    if (!isLoaded) return;
+
+    if (dbUser) {
+      loadProfileData();
+      return;
+    }
+
+    // Utilisateur non connecté: arrêter l'état de chargement
+    setLoading(false);
+  }, [isLoaded, dbUser, loadProfileData]);
 
   if (!isLoaded || loading) {
     return (

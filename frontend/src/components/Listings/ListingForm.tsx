@@ -18,7 +18,6 @@ const ListingForm: React.FC = () => {
     price: '',
     condition: 'GOOD' as 'NEW' | 'VERY_GOOD' | 'GOOD' | 'ACCEPTABLE',
     description: '',
-    location: '',
   });
 
   const [bookSearch, setBookSearch] = useState({
@@ -136,33 +135,52 @@ const ListingForm: React.FC = () => {
 
       let resolvedUser = dbUser;
       if (!resolvedUser) {
+        console.log('Synchronisation de l\'utilisateur...');
         resolvedUser = await syncUserWithDatabase();
       }
 
       if (!resolvedUser) {
-        setError("Profil utilisateur introuvable. Veuillez réessayer.");
+        setError("Profil utilisateur introuvable. Veuillez réessayer ou vous reconnecter.");
+        setLoading(false);
         return;
       }
+
+      console.log('Création de l\'annonce avec userId:', resolvedUser.id);
       
-      await api.createListing({
+      const listingData = {
         userId: resolvedUser.id,
         bookId: parseInt(formData.bookId),
         price: parseFloat(formData.price),
         condition: formData.condition,
         description: formData.description,
-      });
+      };
 
+      console.log('Données à envoyer:', listingData);
+      
+      const result = await api.createListing(listingData);
+      
+      if (!result || !result.id) {
+        throw new Error("L'annonce n'a pas été créée correctement");
+      }
+      
+      console.log('✅ Annonce créée avec succès:', result);
+      alert('Annonce créée avec succès !');
       navigate('/listings');
     } catch (err: unknown) {
+      console.error('❌ Erreur complète:', err);
       let message = "Erreur lors de la création de l'annonce";
       if (err && typeof err === 'object') {
-        const response = (err as { response?: { data?: { error?: string } } }).response;
-        if (response?.data?.error) {
+        const response = (err as { response?: { data?: { error?: string }, status?: number } }).response;
+        if (response?.status === 401) {
+          message = "Authentification échouée. Veuillez vous reconnecter.";
+        } else if (response?.data?.error) {
           message = response.data.error;
+        } else if ((err as Error).message) {
+          message = (err as Error).message;
         }
       }
       setError(message);
-      console.error(err);
+      alert(message);
     } finally {
       setLoading(false);
     }
@@ -170,10 +188,31 @@ const ListingForm: React.FC = () => {
 
   const selectedBook = books.find(b => b.id === parseInt(formData.bookId));
 
+  // Si l'utilisateur n'est pas connecté, afficher un message
+  if (!isSignedIn) {
+    return (
+      <div className="listing-form-page">
+        <div className="form-container">
+          <div className="error-message">
+            <h2>Connexion requise</h2>
+            <p>Vous devez être connecté pour créer une annonce.</p>
+            <p>Veuillez vous connecter via Clerk en haut de la page.</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="listing-form-page">
       <div className="form-container">
         <h1>Créer une annonce</h1>
+        
+        {!dbUser && (
+          <div className="warning-message">
+            ⚠️ Synchronisation du profil en cours...
+          </div>
+        )}
         
         {error && <div className="error-message">{error}</div>}
 
@@ -338,19 +377,6 @@ const ListingForm: React.FC = () => {
                 <option value="GOOD">Bon état</option>
                 <option value="ACCEPTABLE">État correct</option>
               </select>
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="location">Localisation *</label>
-              <input
-                type="text"
-                id="location"
-                name="location"
-                placeholder="Montréal, QC"
-                value={formData.location}
-                onChange={handleInputChange}
-                required
-              />
             </div>
 
             <div className="form-group">
