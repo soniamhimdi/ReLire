@@ -36,7 +36,7 @@ export interface User {
   role: UserRole;
   location?: string;
   rating: number;
-  transactionCount: number;
+  transactionCount?: number;  // Optionnel car pas retourné par tous les endpoints
   createdAt: string;
 }
 

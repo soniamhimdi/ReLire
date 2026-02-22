@@ -23,9 +23,8 @@ app.use(cors({
 
 app.use(express.json());
 
-
-//Clerk middleware 
-//app.use(clerkAuth);
+// Clerk middleware - REQUIRED for all auth-protected routes
+app.use(clerkAuth);
 
 // Routes publiques
 app.get('/', (req, res) => {

@@ -11,11 +11,13 @@ export class UserController {
       const users = await prisma.user.findMany({
         select: {
           id: true,
+          clerkId: true,
           email: true,
           name: true,
           userType: true,
           location: true,
           rating: true,
+          role: true,
           createdAt: true
         }
       });
@@ -38,11 +40,13 @@ export class UserController {
         where: { id },
         select: {
           id: true,
+          clerkId: true,
           email: true,
           name: true,
           userType: true,
           location: true,
           rating: true,
+          role: true,
           createdAt: true,
           listings: {
             select: {
@@ -84,10 +88,13 @@ export class UserController {
         data: { email, name, userType, location, clerkId },
         select: {
           id: true,
+          clerkId: true,
           email: true,
           name: true,
           userType: true,
           location: true,
+          rating: true,
+          role: true,
           createdAt: true
         }
       });
@@ -112,11 +119,14 @@ export class UserController {
         data: { name, location },
         select: {
           id: true,
+          clerkId: true,
           email: true,
           name: true,
           userType: true,
           location: true,
-          rating: true
+          rating: true,
+          role: true,
+          createdAt: true
         }
       });
       
@@ -197,6 +207,37 @@ export class UserController {
   async searchUsers(req: Request, res: Response) {
     try {
       const { type, location, minRating, page = '1', limit = '20', email, clerkId } = req.query;
+
+      // Direct lookup when clerkId/email is provided to avoid mismatched profiles
+      if (clerkId || email) {
+        const user = await prisma.user.findFirst({
+          where: {
+            ...(clerkId ? { clerkId: clerkId as string } : {}),
+            ...(email ? { email: { equals: email as string, mode: 'insensitive' } } : {})
+          },
+          select: {
+            id: true,
+            clerkId: true,
+            name: true,
+            email: true,
+            userType: true,
+            location: true,
+            rating: true,
+            createdAt: true
+          }
+        });
+
+        return res.json({
+          data: user ? [user] : [],
+          pagination: {
+            page: 1,
+            limit: 1,
+            total: user ? 1 : 0,
+            totalPages: user ? 1 : 0
+          },
+          filters: { clerkId, email }
+        });
+      }
       
       const pageNum = parseInt(page as string);
       const limitNum = parseInt(limit as string);
@@ -208,12 +249,6 @@ export class UserController {
       if (type) where.userType = type;
       if (location) where.location = { contains: location, mode: 'insensitive' };
       if (minRating) where.rating = { gte: parseFloat(minRating as string) };
-      if (email) {
-        where.email = { equals: email as string, mode: 'insensitive' };
-      }
-      if (clerkId) {
-        where.clerkId = clerkId as string;
-      }
       
       // Recherche avec pagination
       const [users, total] = await Promise.all([
