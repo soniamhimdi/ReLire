@@ -143,7 +143,15 @@ class ApiService {
 
   async getBookListings(bookId: number): Promise<Listing[]> {
     const response = await this.api.get(`/books/${bookId}/listings`);
-    return response.data;
+    if (Array.isArray(response.data)) {
+      return response.data;
+    }
+
+    if (Array.isArray(response.data?.listings)) {
+      return response.data.listings;
+    }
+
+    return [];
   }
 
   // ========== LISTINGS ==========

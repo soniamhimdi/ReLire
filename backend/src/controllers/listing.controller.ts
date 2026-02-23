@@ -788,6 +788,16 @@ export class ListingController {
           condition: true,
           status: true,
           createdAt: true,
+          book: {
+            select: {
+              id: true,
+              title: true,
+              author: true,
+              category: true,
+              ageRange: true,
+              schoolLevel: true
+            }
+          },
           user: {
             select: {
               id: true,
