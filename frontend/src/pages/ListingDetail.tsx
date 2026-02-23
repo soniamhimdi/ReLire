@@ -13,7 +13,8 @@ const ListingDetailPage = () => {
   const [error, setError] = useState<string | null>(null);
   const [reserving, setReserving] = useState(false);
   const [canceling, setCanceling] = useState(false);
-  const { dbUser } = useClerkAuth();
+  const [deleting, setDeleting] = useState(false);
+  const { dbUser, getToken } = useClerkAuth();
 
   useEffect(() => {
     if (id) {
@@ -76,6 +77,30 @@ const ListingDetailPage = () => {
     }
   };
 
+  const handleEdit = () => {
+    if (!listing) return;
+    navigate(`/listings/${listing.id}/edit`);
+  };
+
+  const handleDelete = async () => {
+    if (!listing) return;
+    if (!window.confirm("Confirmer la suppression de cette annonce ?")) return;
+
+    try {
+      setDeleting(true);
+      const token = await getToken();
+      await api.setAuthToken(token);
+      await api.deleteListing(listing.id);
+      alert("Annonce supprimée avec succès.");
+      navigate("/listings");
+    } catch (err) {
+      console.error("Erreur lors de la suppression:", err);
+      alert("Impossible de supprimer cette annonce.");
+    } finally {
+      setDeleting(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="listing-detail-page">
@@ -131,6 +156,9 @@ const ListingDetailPage = () => {
   const isOwner = dbUser?.id === listing.user.id;
   const isBuyer = dbUser?.id === listing.transaction?.buyer?.id;
   const canCancelReservation = listing.status === 'RESERVED' && (isOwner || isBuyer);
+  const canEdit = isOwner && listing.status === 'ACTIVE';
+
+  const fallbackCover = "/default-book.svg";
 
   return (
     <div className="listing-detail-page">
@@ -148,11 +176,13 @@ const ListingDetailPage = () => {
         <div className="book-section">
           <div className="book-cover-container">
             <img
-              src={listing.book.coverImage || '/default-book.jpg'}
+              src={listing.book.coverImage || fallbackCover}
               alt={listing.book.title}
               onError={(e) => {
-                const target = e.target as HTMLImageElement;
-                target.src = '/default-book.jpg';
+                const target = e.currentTarget;
+                if (target.dataset.fallbackApplied) return;
+                target.dataset.fallbackApplied = "true";
+                target.src = fallbackCover;
               }}
             />
           </div>
@@ -231,7 +261,7 @@ const ListingDetailPage = () => {
               </div>
             </div>
 
-            {listing.status === 'ACTIVE' && (
+            {listing.status === 'ACTIVE' && !isOwner && (
               <div className="action-buttons">
                 <button 
                   className="btn-contact"
@@ -239,15 +269,30 @@ const ListingDetailPage = () => {
                 >
                   Contacter le vendeur
                 </button>
-                {!isOwner && (
-                  <button 
-                    className="btn-reserve"
-                    onClick={handleReserve}
-                    disabled={reserving}
-                  >
-                    {reserving ? 'Reservation...' : 'Reserver'}
+                <button 
+                  className="btn-reserve"
+                  onClick={handleReserve}
+                  disabled={reserving}
+                >
+                  {reserving ? 'Reservation...' : 'Reserver'}
+                </button>
+              </div>
+            )}
+
+            {isOwner && (
+              <div className="owner-actions">
+                {canEdit && (
+                  <button className="btn-edit" onClick={handleEdit}>
+                    Modifier l'annonce
                   </button>
                 )}
+                <button
+                  className="btn-delete"
+                  onClick={handleDelete}
+                  disabled={deleting}
+                >
+                  {deleting ? "Suppression..." : "Supprimer l'annonce"}
+                </button>
               </div>
             )}
 

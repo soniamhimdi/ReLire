@@ -7,7 +7,7 @@ import './ListingForm.css';
 
 const ListingForm: React.FC = () => {
   const navigate = useNavigate();
-  const { isSignedIn, dbUser, syncUserWithDatabase } = useClerkAuth();
+  const { isSignedIn, dbUser, syncUserWithDatabase, getToken } = useClerkAuth();
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(false);
   const [searchLoading, setSearchLoading] = useState(false);
@@ -94,6 +94,7 @@ const ListingForm: React.FC = () => {
       setLoading(true);
       const createdBook = await api.createBook(newBook);
       setBooks(prev => [...prev, createdBook]);
+      setSearchResults(prev => [createdBook, ...prev]);
       setFormData(prev => ({ ...prev, bookId: String(createdBook.id) }));
       setShowCreateBook(false);
       setNewBook({
@@ -132,6 +133,9 @@ const ListingForm: React.FC = () => {
     try {
       setLoading(true);
       setError(null);
+
+      const token = await getToken();
+      await api.setAuthToken(token);
 
       let resolvedUser = dbUser;
       if (!resolvedUser) {

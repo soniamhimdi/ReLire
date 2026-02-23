@@ -11,6 +11,7 @@ import BookDetailPage from './pages/BookDetail';
 import ListingsPage from './pages/Listing';
 import ListingDetailPage from './pages/ListingDetail';
 import ListingForm from './components/Listings/ListingForm';
+import ListingEditPage from './pages/ListingEdit';
 import ProfilePage from './pages/Profile';
 
 // import { useAuth } from "@clerk/clerk-react";
@@ -46,6 +47,7 @@ function App() {
             <Route path="/books/:id" element={<BookDetailPage />} />
             <Route path="/listings" element={<ListingsPage />} />
             <Route path="/listings/new" element={<ListingForm />} />
+            <Route path="/listings/:id/edit" element={<ListingEditPage />} />
             <Route path="/listings/:id" element={<ListingDetailPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             {/* Add more routes as needed */}

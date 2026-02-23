@@ -313,6 +313,52 @@
   box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
 }
 
+.owner-actions {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.btn-edit,
+.btn-delete {
+  width: 100%;
+  padding: 0.875rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-edit {
+  background-color: #f7fafc;
+  color: #667eea;
+  border: 2px solid #667eea;
+}
+
+.btn-edit:hover {
+  background-color: #667eea;
+  color: white;
+}
+
+.btn-delete {
+  background-color: #ef4444;
+  color: white;
+  border: none;
+}
+
+.btn-delete:hover:not(:disabled) {
+  background-color: #dc2626;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.35);
+}
+
+.btn-delete:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .status-message {
   padding: 1rem;
   border-radius: 8px;

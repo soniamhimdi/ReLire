@@ -76,6 +76,8 @@ const BookDetailPage = () => {
     return labels[category] || category;
   };
 
+  const fallbackCover = "/default-book.svg";
+
   return (
     <div className="book-detail-page">
       {/* Breadcrumb */}
@@ -91,11 +93,13 @@ const BookDetailPage = () => {
       <div className="book-detail-header">
         <div className="book-cover-large">
           <img
-            src={book.coverImage || '/default-book.jpg'}
+            src={book.coverImage || fallbackCover}
             alt={book.title}
             onError={(e) => {
-              const target = e.target as HTMLImageElement;
-              target.src = '/default-book.jpg';
+              const target = e.currentTarget;
+              if (target.dataset.fallbackApplied) return;
+              target.dataset.fallbackApplied = "true";
+              target.src = fallbackCover;
             }}
           />
         </div>
